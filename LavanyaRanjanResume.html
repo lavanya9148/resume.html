@@ -1,0 +1,252 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavanya Ranjan Resume</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #ffffff;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #2980b9;
+            color: white;
+            text-align: center;
+            padding: 2em;
+            position: relative;
+        }
+        nav {
+            background-color: #ffffff;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: #2980b9;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .section {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2980b9;
+            font-family: 'Arial', sans-serif;
+        }
+        h2 {
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+        .education, .academic-projects, .volunteer, .position, .achievements, .skills, .hobbies {
+            display: block;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        .contact {
+            text-align: center;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #2980b9;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lavanya Ranjan</h1>
+        <p class="contact">lavanyaranjan098@gmail.com</p>
+    </header>
+    <nav>
+        <a href="#education">Education</a>
+        <a href="#academic-projects">Academic Projects</a>
+        <a href="#volunteer">Volunteer/Internship</a>
+        <a href="#position">Position of Responsibility</a>
+        <a href="#achievements">Achievements and Certificates</a>
+        <a href="#skills">Skills</a>
+        <a href="#hobbies">Hobbies</a>
+    </nav>
+    <div class="section" id="education">
+        <h2>Education</h2>
+        <table>
+            <tr>
+                <th>Institution</th>
+                <th>Degree</th>
+                <th>CGPA/Percentage</th>
+                <th>Year</th>
+            </tr>
+            <tr>
+                <td>Indian Institute of Management, Bangalore</td>
+                <td>DBA (Digital Business and Entrepreneurship)</td>
+                <td>-</td>
+                <td>2024-2027</td>
+            </tr>
+            <tr>
+                <td>Narsee Monjee Institute of Management Studies, AMSOC, Mumbai</td>
+                <td>BBA (S.Y.)</td>
+                <td>3.89 CGPA</td>
+                <td>2023-26</td>
+            </tr>
+            <tr>
+                <td>Vidya Devi Jindal School, Hisar</td>
+                <td>XII (Commerce)</td>
+                <td>92.4%</td>
+                <td>2022-23</td>
+            </tr>
+            <tr>
+                <td>Vidya Devi Jindal School, Hisar</td>
+                <td>X</td>
+                <td>93.4%</td>
+                <td>2020-21</td>
+            </tr>
+        </table>
+    </div>
+    <div class="section" id="academic-projects">
+        <h2>Academic Projects</h2>
+        <ul>
+            <li>Research paper: Operations Research: Fleet Optimization in Airlines: Leveraging Transportation Models for Enhanced Efficiency and Viability</li>
+            <li>Research paper: Impact of Covid-19 (Demand side shocks and Supply side shocks; V-Shaped recovery)</li>
+            <li>Financial Analysis of Tata Steel</li>
+            <li>Developed and managed a small-scale online retail business offering aesthetically curated gift boxes featuring scented candles and diaries. Focused on product design, branding, and market positioning to enhance customer appeal.</li>
+        </ul>
+    </div>
+    <div class="section" id="volunteer">
+        <h2>Volunteer/Internship</h2>
+        <ul>
+            <li><strong>NGO</strong> - June 2024
+                <ul>
+                    <li>Contributed to capacity-building initiatives and program documentation to support HIV/AIDS awareness and intervention efforts.</li>
+                    <li>Assisted in research, fundraising, and digital documentation to enhance organizational impact.</li>
+                </ul>
+            </li>
+            <li><strong>Muskurahat Foundation</strong> - May 2024 – Jun 2024
+                <ul>
+                    <li>Successfully persuaded potential donors, achieving a 40% conversion rate and raising ₹5,300 to fund 106 days of education and healthcare for underprivileged children.</li>
+                    <li>Completed an advanced crowdfunding course and implemented strategic outreach techniques to enhance donor engagement and fundraising effectiveness.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="section" id="position">
+        <h2>Position of Responsibility</h2>
+        <ul>
+            <li><strong>Vidya Devi Jindal School</strong> - Academic Prefect - 2022
+                <ul>
+                    <li>Served as Academic Prefect, leading student initiatives, mentoring peers, and promoting academic excellence.</li>
+                    <li>Assisted in organizing academic events, coordinating with faculty, and maintaining discipline among students.</li>
+                </ul>
+            </li>
+            <li><strong>Enactus, NMIMS, AMSOC</strong> - Senior Member - 2023
+                <ul>
+                    <li>Collaborated with a 12-member team to foster partnerships, plan projects, and drive social impact through Enactus initiatives.</li>
+                </ul>
+            </li>
+            <li><strong>VAAYU, NMIMS</strong> - Performing Arts Coordinator - 2023 – Present
+                <ul>
+                    <li>Led the planning and execution of large-scale performing arts events for 8,000+ attendees, managing dance, music, drama, and fashion categories.</li>
+                    <li>Collaborated with teams to ensure seamless event operations and served as Event Head for select performances.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="section" id="achievements">
+        <h2>Achievements and Certificates</h2>
+        <ul>
+            <li>Investment Risk Management – Coursera Project Network
+                <ul>
+                    <li>Completed a course on risk assessment, and mitigation strategies to enhance financial decision-making.</li>
+                </ul>
+            </li>
+            <li>Achieved a senior diploma in Kathak and vocal music, demonstrating proficiency in classical performing arts.</li>
+        </ul>
+    </div>
+    <div class="section" id="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>Market Research & Consumer Behaviour, Performing Arts, Leadership & Team Management, Attention to Detail</li>
+            <li>Event Planning – Interest in organizing and managing creative and large-scale events.</li>
+        </ul>
+    </div>
+    <div class="section" id="hobbies">
+        <h2>Hobbies</h2>
+        <ul>
+            <li>Performing Arts – Passion for classical dance (Kathak) and vocal music.</li>
+            <li>Entrepreneurship – Keen interest in small-scale business ventures and creative product development.</li>
+        </ul>
+    </div>
+    <footer>
+        <p>© 2025 Lavanya Ranjan</p>
+    </footer>
+</body>
+</html>
